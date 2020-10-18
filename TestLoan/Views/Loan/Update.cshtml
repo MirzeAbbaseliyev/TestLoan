@@ -1,0 +1,147 @@
+﻿@model UILoan
+@{
+    ViewData["Title"] = "Update";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Update</h1>
+
+<form method="post" asp-action="Update">
+    <div class="form-group col-md-2">
+        <label asp-for="Loan.Amount">Amount:</label>
+        <input asp-for="Loan.Amount" onchange="Calculate()" id="Amount" class="form-control" required>
+        <span asp-validation-for="Loan.Amount" class="text-danger"></span><br />
+
+        <label asp-for="Loan.InterestRate">InterestRate:</label>
+        <input asp-for="Loan.InterestRate" onchange="Calculate()" id="InterestRate" class="form-control" required>
+        <span asp-validation-for="Loan.InterestRate" class="text-danger"></span><br />
+
+        <label asp-for="Loan.PayloadDate">PayloadDate:</label>
+        <input asp-for="Loan.PayloadDate" onchange="Calculate()" id="PayloadDate" class="form-control" required>
+        <span asp-validation-for="Loan.PayloadDate" class="text-danger"></span><br />
+
+        <label asp-for="Loan.LoanPeriod">LoanPeriod:</label>
+        <select asp-for="Loan.LoanPeriod" onchange="Calculate()" id="LoanPeriod" class="form-control"></select><br />
+
+        <label asp-for="Loan.ClientId">Client:</label>
+        <select asp-for="Loan.ClientId" asp-items="Model.Clients" class="form-control"></select><br />
+
+        <button type="button" class="btn btn-primary" onclick="Calculate()">Calculate</button>
+    </div>
+
+    <input type="hidden" asp-for="Loan.Id" />
+
+
+
+    <table id="Invoices" class="table  hover">
+        <thead>
+            <tr>
+                <th class="th-sm">
+                    NO
+                </th>
+                <th class="th-sm">
+                    Amount
+                </th>
+                <th class="th-sm">
+                    Date
+                </th>
+
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model.Invoices.Count > 0)
+            {
+                @for (int i = 0; i < @Model.Invoices.Count; i++)
+                {
+            <tr>
+                <td>@Model.Invoices[i].OrderNr</td>
+                <td>@Model.Invoices[i].Amount</td>
+                <td>@Model.Invoices[i].DueDate.ToString("dd.MM.yyyy")</td>
+                <td style="display:none"><input type="hidden" asp-for="@Model.Invoices[i].Id" /></td>
+            </tr>
+                }
+            }
+        </tbody>
+    </table>
+
+
+    <input type="hidden" asp-for="Loan.Id" />
+
+
+    <button id="saveBtn" type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" disabled>Update</button>
+
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Update Loan</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    Düzgün əlavə etdiyinə əminsənmi?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Edit</button>
+
+                    <button type="submit" class="btn btn-primary">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</form>
+
+<a asp-action="Cancle" class="btn btn-danger"> cancle</a>
+@section Scripts{
+    <script>
+
+        $(document).ready(function () {
+          
+            for (var i = 3; i < 24; i++) {
+                $("#LoanPeriod").append($("<option>")
+                    .val(i)
+                    .html(i)
+                );
+            }
+             $('#LoanPeriod option[value="'+@Model.Loan.LoanPeriod+'"]').attr("selected", true);
+        });
+
+       
+        //bunu yerine ajax istifade etmedim. daha suretli olsun deye bele etdim.  controllada uygun metodum var.
+        function Calculate() {
+            var amount = parseFloat( $('#Amount').val());
+            var rate = parseFloat($('#InterestRate').val());
+            var period = $("#LoanPeriod").val();
+
+            if (amount == null || rate == null || period == null) return;
+            var date = new Date($('#PayloadDate').val());
+            var currentDay = date.getDate();  console.log(date);
+            $("#Invoices > tbody").html("");
+            for (var i = 1; i <= period; i++) {
+                var rateAmount = ((period - i + 1) / period) * amount;
+
+                var total = amount / period + (rate * rateAmount) / 100;
+
+                var currentMonth = date.getMonth();
+                date.setMonth(currentMonth + 1, currentDay);
+
+                var row = "<tr><td>" + i + "</td>"
+                    + "<td>" + total.toString() + "</td>"
+                    + "<td>" + getFormattedDate(date)+ "</td></tr>"
+                $("#Invoices > tbody").append(row);
+            }
+            $('#saveBtn').prop('disabled', false);
+        }
+        function getFormattedDate(date) {
+            let year = date.getFullYear();
+            let month = (1 + date.getMonth()).toString().padStart(2, '0');
+            let day = date.getDate().toString().padStart(2, '0');
+            return day + '/' + month + '/' + year;
+        }
+    </script>
+}
+
+

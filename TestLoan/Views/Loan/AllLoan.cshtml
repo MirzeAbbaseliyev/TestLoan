@@ -1,0 +1,82 @@
+﻿@model List<UILoanJoinClientName>
+@{
+    ViewData["Title"] = "AllLoan";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>AllLoan</h1>
+<!-- add begin-->
+<div class="container">
+    <a asp-action="Add" class="btn btn-primary">
+        <i class="fa fa-plus-circle">
+        </i> Add
+    </a>
+</div>
+
+<table id="AllLoan" class="table  hover">
+    <thead>
+        <tr>
+            <th class="th-sm">
+                ID
+            </th>
+            <th class="th-sm">
+                FullName
+            </th>
+            <th class="th-sm">
+                Amount
+            </th>
+            <th class="th-sm">
+                LoanPeriod
+            </th>
+            <th class="th-sm">
+                PayloadDate
+            </th>
+            <th class="th-sm">
+                Edit
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+
+        @for (int i = 0; i < Model.Count; i++)
+        {
+        <tr>
+            <td>@Model[i].Id</td>
+            <td>@Model[i].ClientName @Model[i].ClientSurName</td>            
+            <td>@Model[i].Amount</td>
+            <td>@Model[i].LoanPeriod</td>
+            <td>@Model[i].PayloadDate.ToString("dd.MM.yyyy")</td>
+            <td>
+                <a onclick="showDiv(@Model[i].Id)" id="@Model[i].Id" class="btn btn-danger">
+                    <i class="fa fa-trash-alt"></i>
+                </a>
+                <div id="div_@Model[i].Id" class="row" style="display:none">
+                    Əminsənmi?
+                    <form method="post" asp-action="Delete" asp-route-Id="@Model[i].Id">
+                        <button onclick="hidenDiv(@Model[i].Id)" type="submit" id="@Model[i].Id" class="btn btn-danger">
+                            Bəli
+                        </button>
+                    </form>
+                    <a onclick="hidenDiv(@Model[i].Id)" class="btn btn-success">
+                        Xeyr
+                    </a>
+                </div>
+                <a asp-controller="Loan" asp-action="Update" asp-route-Id="@Model[i].Id" class="btn btn-primary">
+                    <i class="fa fa-edit"></i>
+                </a>
+            </td>
+
+        </tr>
+        }
+
+    </tbody>
+</table>
+
+@section Scripts{
+    <script>
+        $(document).ready(function () {
+            $('#AllLoan').DataTable();
+        });
+        
+    </script>
+}
