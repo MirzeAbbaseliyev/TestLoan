@@ -1,0 +1,160 @@
+﻿USE [master]
+GO
+/****** Object:  Database [TestLoan]    Script Date: 18.10.2020 21:27:52 ******/
+CREATE DATABASE [TestLoan]
+ CONTAINMENT = NONE
+ ON  PRIMARY 
+( NAME = N'TestLoan', FILENAME = N'C:\Program Files\Microsoft SQL Server\MSSQL11.SQLEXPRESS\MSSQL\DATA\TestLoan.mdf' , SIZE = 3136KB , MAXSIZE = UNLIMITED, FILEGROWTH = 1024KB )
+ LOG ON 
+( NAME = N'TestLoan_log', FILENAME = N'C:\Program Files\Microsoft SQL Server\MSSQL11.SQLEXPRESS\MSSQL\DATA\TestLoan.ldf' , SIZE = 1024KB , MAXSIZE = 2048GB , FILEGROWTH = 10%)
+GO
+ALTER DATABASE [TestLoan] SET COMPATIBILITY_LEVEL = 110
+GO
+IF (1 = FULLTEXTSERVICEPROPERTY('IsFullTextInstalled'))
+begin
+EXEC [TestLoan].[dbo].[sp_fulltext_database] @action = 'enable'
+end
+GO
+ALTER DATABASE [TestLoan] SET ANSI_NULL_DEFAULT ON 
+GO
+ALTER DATABASE [TestLoan] SET ANSI_NULLS ON 
+GO
+ALTER DATABASE [TestLoan] SET ANSI_PADDING ON 
+GO
+ALTER DATABASE [TestLoan] SET ANSI_WARNINGS ON 
+GO
+ALTER DATABASE [TestLoan] SET ARITHABORT ON 
+GO
+ALTER DATABASE [TestLoan] SET AUTO_CLOSE OFF 
+GO
+ALTER DATABASE [TestLoan] SET AUTO_CREATE_STATISTICS ON 
+GO
+ALTER DATABASE [TestLoan] SET AUTO_SHRINK OFF 
+GO
+ALTER DATABASE [TestLoan] SET AUTO_UPDATE_STATISTICS ON 
+GO
+ALTER DATABASE [TestLoan] SET CURSOR_CLOSE_ON_COMMIT OFF 
+GO
+ALTER DATABASE [TestLoan] SET CURSOR_DEFAULT  LOCAL 
+GO
+ALTER DATABASE [TestLoan] SET CONCAT_NULL_YIELDS_NULL ON 
+GO
+ALTER DATABASE [TestLoan] SET NUMERIC_ROUNDABORT OFF 
+GO
+ALTER DATABASE [TestLoan] SET QUOTED_IDENTIFIER ON 
+GO
+ALTER DATABASE [TestLoan] SET RECURSIVE_TRIGGERS OFF 
+GO
+ALTER DATABASE [TestLoan] SET  DISABLE_BROKER 
+GO
+ALTER DATABASE [TestLoan] SET AUTO_UPDATE_STATISTICS_ASYNC OFF 
+GO
+ALTER DATABASE [TestLoan] SET DATE_CORRELATION_OPTIMIZATION OFF 
+GO
+ALTER DATABASE [TestLoan] SET TRUSTWORTHY OFF 
+GO
+ALTER DATABASE [TestLoan] SET ALLOW_SNAPSHOT_ISOLATION OFF 
+GO
+ALTER DATABASE [TestLoan] SET PARAMETERIZATION SIMPLE 
+GO
+ALTER DATABASE [TestLoan] SET READ_COMMITTED_SNAPSHOT OFF 
+GO
+ALTER DATABASE [TestLoan] SET HONOR_BROKER_PRIORITY OFF 
+GO
+ALTER DATABASE [TestLoan] SET RECOVERY FULL 
+GO
+ALTER DATABASE [TestLoan] SET  MULTI_USER 
+GO
+ALTER DATABASE [TestLoan] SET PAGE_VERIFY CHECKSUM  
+GO
+ALTER DATABASE [TestLoan] SET DB_CHAINING OFF 
+GO
+ALTER DATABASE [TestLoan] SET FILESTREAM( NON_TRANSACTED_ACCESS = OFF ) 
+GO
+ALTER DATABASE [TestLoan] SET TARGET_RECOVERY_TIME = 0 SECONDS 
+GO
+USE [TestLoan]
+GO
+/****** Object:  Table [dbo].[Client]    Script Date: 18.10.2020 21:27:54 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Client](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[Name] [nvarchar](50) NULL,
+	[SurName] [nvarchar](50) NULL,
+	[TelePhoneNr] [nvarchar](20) NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+/****** Object:  Table [dbo].[Invoice]    Script Date: 18.10.2020 21:27:54 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Invoice](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[Amount] [money] NULL,
+	[DueDate] [date] NULL,
+	[InvoiceNr] [int] NULL,
+	[OrderNr] [int] NULL,
+	[LoanId] [int] NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+/****** Object:  Table [dbo].[Loan]    Script Date: 18.10.2020 21:27:54 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Loan](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[Amount] [money] NULL,
+	[InterestRate] [decimal](10, 2) NULL,
+	[LoanPeriod] [int] NULL,
+	[PayloadDate] [date] NULL,
+	[ClientId] [int] NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+SET IDENTITY_INSERT [dbo].[Client] ON 
+
+INSERT [dbo].[Client] ([Id], [Name], [SurName], [TelePhoneNr]) VALUES (1, N'Mirze', N'Abbaseliyev', N'0707136577')
+INSERT [dbo].[Client] ([Id], [Name], [SurName], [TelePhoneNr]) VALUES (2, N'Eli', N'Veliyev', N'0701111111')
+SET IDENTITY_INSERT [dbo].[Client] OFF
+SET IDENTITY_INSERT [dbo].[Invoice] ON 
+
+INSERT [dbo].[Invoice] ([Id], [Amount], [DueDate], [InvoiceNr], [OrderNr], [LoanId]) VALUES (18, 236.0000, CAST(0xC4410B00 AS Date), 0, 1, 1)
+INSERT [dbo].[Invoice] ([Id], [Amount], [DueDate], [InvoiceNr], [OrderNr], [LoanId]) VALUES (19, 224.0000, CAST(0xE2410B00 AS Date), 0, 2, 1)
+INSERT [dbo].[Invoice] ([Id], [Amount], [DueDate], [InvoiceNr], [OrderNr], [LoanId]) VALUES (20, 212.0000, CAST(0x01420B00 AS Date), 0, 3, 1)
+INSERT [dbo].[Invoice] ([Id], [Amount], [DueDate], [InvoiceNr], [OrderNr], [LoanId]) VALUES (27, 287.5000, CAST(0xD0410B00 AS Date), 0, 1, 2)
+INSERT [dbo].[Invoice] ([Id], [Amount], [DueDate], [InvoiceNr], [OrderNr], [LoanId]) VALUES (28, 275.0000, CAST(0xEE410B00 AS Date), 0, 2, 2)
+INSERT [dbo].[Invoice] ([Id], [Amount], [DueDate], [InvoiceNr], [OrderNr], [LoanId]) VALUES (29, 262.5000, CAST(0x0D420B00 AS Date), 0, 3, 2)
+INSERT [dbo].[Invoice] ([Id], [Amount], [DueDate], [InvoiceNr], [OrderNr], [LoanId]) VALUES (48, 30.0000, CAST(0xD0410B00 AS Date), 0, 1, 3)
+INSERT [dbo].[Invoice] ([Id], [Amount], [DueDate], [InvoiceNr], [OrderNr], [LoanId]) VALUES (49, 28.7500, CAST(0xEE410B00 AS Date), 0, 2, 3)
+INSERT [dbo].[Invoice] ([Id], [Amount], [DueDate], [InvoiceNr], [OrderNr], [LoanId]) VALUES (50, 27.5000, CAST(0x0D420B00 AS Date), 0, 3, 3)
+INSERT [dbo].[Invoice] ([Id], [Amount], [DueDate], [InvoiceNr], [OrderNr], [LoanId]) VALUES (51, 26.2500, CAST(0x2C420B00 AS Date), 0, 4, 3)
+SET IDENTITY_INSERT [dbo].[Invoice] OFF
+SET IDENTITY_INSERT [dbo].[Loan] ON 
+
+INSERT [dbo].[Loan] ([Id], [Amount], [InterestRate], [LoanPeriod], [PayloadDate], [ClientId]) VALUES (1, 600.0000, CAST(6.00 AS Decimal(10, 2)), 3, CAST(0xA5410B00 AS Date), 1)
+INSERT [dbo].[Loan] ([Id], [Amount], [InterestRate], [LoanPeriod], [PayloadDate], [ClientId]) VALUES (2, 750.0000, CAST(5.00 AS Decimal(10, 2)), 3, CAST(0xB1410B00 AS Date), 1)
+INSERT [dbo].[Loan] ([Id], [Amount], [InterestRate], [LoanPeriod], [PayloadDate], [ClientId]) VALUES (3, 100.0000, CAST(5.00 AS Decimal(10, 2)), 4, CAST(0xB1410B00 AS Date), 2)
+SET IDENTITY_INSERT [dbo].[Loan] OFF
+USE [master]
+GO
+ALTER DATABASE [TestLoan] SET  READ_WRITE 
+GO
