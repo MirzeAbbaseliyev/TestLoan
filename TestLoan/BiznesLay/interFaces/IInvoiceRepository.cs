@@ -8,5 +8,6 @@ namespace TestLoan.BiznesLay.interFaces
 {
     public interface IInvoiceRepository:ICRUD<Invoice>
     {
+        bool DeleteLoanInvoice(int loanId);
     }
 }

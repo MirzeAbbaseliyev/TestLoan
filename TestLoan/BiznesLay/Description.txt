@@ -1,0 +1,1 @@
+﻿bu test proyekde entityframework ile isleye bilerdim amma men oze aid olam orm-den bir qisimi isletdim.migrationu numune ucun daxil etmisem. ajax da istifade etmedim. aciqlamasini yazmisam. vaxt qisa oldugundan loglama isleri ve bu kimi isleri etmedim. mssql bazanin scriptlerini de hemcinin proyekte elave edirem. 

@@ -22,7 +22,7 @@ namespace TestLoan.Controllers
 
         public IActionResult AllLoan()
         {
-            var model = Repository.Reader<UILoanJoinClientName>("Select l.* , c.Name as ClientName, c.SurName as ClientSurName  from Loan l left Join Client c on l.ClientId=c.Id ");
+            var model = Repository.getAllLoansWithClinetName();
             return View(model);
         }
         
@@ -30,7 +30,7 @@ namespace TestLoan.Controllers
         public IActionResult Add()
         {
             var model = new UILoan();
-            var c = Repository.Reader<Client>("Select * from Client");
+            var c = Repository.getAllClients();
             if (c.Count > 0)
                 foreach (var item in c)
                 {
@@ -63,7 +63,7 @@ namespace TestLoan.Controllers
             var loan = Repository.GetById(id);
             var model = new UILoan();
             model.Loan = loan.FirstOrDefault();
-            var c = Repository.Reader<Client>("Select * from Client");
+            var c = Repository.getAllClients();
             var invoive = Repository.Reader<Invoice>($"Select * from Invoice i where i.LoanId={id} ");
             model.Invoices.AddRange(invoive);
             if (c.Count > 0)
@@ -80,7 +80,7 @@ namespace TestLoan.Controllers
             var b=Repository.Update(model.Loan, model.Loan.Id);
             if (b)
             {
-                Repository.NonQuery($"Delete Invoice where LoanId={model.Loan.Id}");
+                InvoiceRepository.DeleteLoanInvoice(model.Loan.Id);
                 var l = Calculate(model.Loan.Amount, model.Loan.InterestRate,
                    model.Loan.LoanPeriod, model.Loan.PayloadDate, model.Loan.Id);
                 foreach (var item in l)
